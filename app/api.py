@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 MODEL_PATH = Path(__file__).resolve().parent.parent / "model.pkl"
 
-app = FastAPI(title="Iris Classifier API", version="1.0.0")
+app = FastAPI(title="Wine Classifier API", version="1.0.0")
 
 _artifact: dict | None = None
 
@@ -23,11 +23,20 @@ def get_artifact() -> dict:
     return _artifact
 
 
-class IrisFeatures(BaseModel):
-    sepal_length: float = Field(..., ge=0, example=5.1)
-    sepal_width: float = Field(..., ge=0, example=3.5)
-    petal_length: float = Field(..., ge=0, example=1.4)
-    petal_width: float = Field(..., ge=0, example=0.2)
+class WineFeatures(BaseModel):
+    alcohol: float = Field(..., example=13.2)
+    malic_acid: float = Field(..., example=1.78)
+    ash: float = Field(..., example=2.14)
+    alcalinity_of_ash: float = Field(..., example=11.2)
+    magnesium: float = Field(..., example=100.0)
+    total_phenols: float = Field(..., example=2.65)
+    flavanoids: float = Field(..., example=2.76)
+    nonflavanoid_phenols: float = Field(..., example=0.26)
+    proanthocyanins: float = Field(..., example=1.28)
+    color_intensity: float = Field(..., example=4.38)
+    hue: float = Field(..., example=1.05)
+    od280_od315: float = Field(..., example=3.40)
+    proline: float = Field(..., example=1050.0)
 
 
 class PredictionResponse(BaseModel):
@@ -41,16 +50,25 @@ def health() -> dict:
 
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict(features: IrisFeatures) -> PredictionResponse:
+def predict(features: WineFeatures) -> PredictionResponse:
     artifact = get_artifact()
     model = artifact["model"]
     target_names = artifact["target_names"]
 
     row = [[
-        features.sepal_length,
-        features.sepal_width,
-        features.petal_length,
-        features.petal_width,
+        features.alcohol,
+        features.malic_acid,
+        features.ash,
+        features.alcalinity_of_ash,
+        features.magnesium,
+        features.total_phenols,
+        features.flavanoids,
+        features.nonflavanoid_phenols,
+        features.proanthocyanins,
+        features.color_intensity,
+        features.hue,
+        features.od280_od315,
+        features.proline,
     ]]
     pred = int(model.predict(row)[0])
     return PredictionResponse(prediction=pred, label=target_names[pred])

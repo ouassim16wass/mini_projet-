@@ -54,7 +54,7 @@ jobs:
 
       - name: Set lowercase image name
         id: img
-        run: echo "name=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/iris-api" >> "$GITHUB_OUTPUT"
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/wine-api" >> "$GITHUB_OUTPUT"
 
       - name: Build & push image
         uses: docker/build-push-action@v6
