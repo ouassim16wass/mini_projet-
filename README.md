@@ -55,3 +55,5 @@ Réponse :
 
 - **Push sur `feature/**`** → installe les dépendances + entraîne le modèle.
 - **Push sur `develop`** → entraîne + build l'image Docker + publie sur `ghcr.io/ouassim16wass/iris-api`.
+
+<!-- trigger feature pipeline -->
